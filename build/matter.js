@@ -1,5 +1,5 @@
 /**
-* matter-js 0.10.0 by @liabru 2016-05-01
+* matter-js master by @liabru 2016-06-05
 * http://brm.io/matter-js/
 * License MIT
 */
@@ -72,6 +72,7 @@ var Axes = require('../geometry/Axes');
             type: 'body',
             label: 'Body',
             parts: [],
+            continuous: 1,
             angle: 0,
             vertices: Vertices.fromPath('L 0 0 L 40 0 L 40 40 L 0 40'),
             position: { x: 0, y: 0 },
@@ -725,6 +726,22 @@ var Axes = require('../geometry/Axes');
      *
      * @property parts
      * @type body[]
+     */
+
+    /**
+     * Enables continuous collisions, there are three possible values:
+     * - 0: disabled
+     * - 1: dynamic
+     * - 2: always
+     *
+     * Where the 'dynamic' setting enables continuous collisions only when required based on velocity.
+     * This provides better performance than 'always' at the cost of slightly softer collisions.
+     * 
+     * In a collision if _either_ or both bodies have continuous collisions enabled then the check will be made.
+     *
+     * @property continuous
+     * @type number
+     * @default 0
      */
 
     /**
@@ -2811,10 +2828,12 @@ var Resolver = {};
 
 module.exports = Resolver;
 
+var Body = require('../body/Body');
 var Vertices = require('../geometry/Vertices');
 var Vector = require('../geometry/Vector');
 var Common = require('../core/Common');
 var Bounds = require('../geometry/Bounds');
+var SAT = require('../collision/SAT');
 
 (function() {
 
@@ -2823,6 +2842,57 @@ var Bounds = require('../geometry/Bounds');
     Resolver._positionDampen = 0.9;
     Resolver._positionWarming = 0.8;
     Resolver._frictionNormalMultiplier = 5;
+
+    /**
+     * Solve continuous collisions using the speculative contacts approach.
+     * @method solveContinuous
+     * @param {collision[]} collisions
+     */
+    Resolver.solveContinuous = function(collisions) {
+        var i,
+            collision,
+            bodyA,
+            bodyB;
+
+        for (i = 0; i < collisions.length; i++) {
+            collision = collisions[i];
+
+            // a negative depth signifies a continuous collision has been detected
+            if (collision.depth >= 0)
+                continue;
+            
+            bodyA = collision.bodyA.parent;
+            bodyB = collision.bodyB.parent;
+
+            var normalSpeedBodyA = Math.abs(Vector.dot(collision.normal, bodyA.velocity)),
+                normalSpeedBodyB = Math.abs(Vector.dot(collision.normal, bodyB.velocity)),
+                normalSpeedTotal = normalSpeedBodyA + normalSpeedBodyB,
+                bodyAShare = normalSpeedBodyA / normalSpeedTotal,
+                bodyBShare = normalSpeedBodyB / normalSpeedTotal;
+
+            // translate the bodies such they are colliding exactly on edge
+            if (bodyAShare > 0) {
+                // TODO: accumulate and defer translations for performance
+                Body.translate(bodyA, {
+                    x: collision.penetration.x * bodyAShare,
+                    y: collision.penetration.y * bodyAShare
+                });
+            }
+
+            if (bodyBShare > 0) {
+                Body.translate(bodyB, {
+                    x: -collision.penetration.x * bodyBShare,
+                    y: -collision.penetration.y * bodyBShare
+                });
+            }
+
+            // update collision
+            collision.depth = 0;
+            collision.penetration.x = 0;
+            collision.penetration.y = 0;
+            collision.supports = SAT.findSupports(collision);
+        }
+    };
 
     /**
      * Prepare pairs for position solving.
@@ -3146,7 +3216,7 @@ var Bounds = require('../geometry/Bounds');
 
 })();
 
-},{"../core/Common":14,"../geometry/Bounds":24,"../geometry/Vector":26,"../geometry/Vertices":27}],11:[function(require,module,exports){
+},{"../body/Body":1,"../collision/SAT":11,"../core/Common":14,"../geometry/Bounds":24,"../geometry/Vector":26,"../geometry/Vertices":27}],11:[function(require,module,exports){
 /**
 * The `Matter.SAT` module contains methods for detecting collisions using the Separating Axis Theorem.
 *
@@ -3178,7 +3248,36 @@ var Vector = require('../geometry/Vector');
             minOverlap,
             collision,
             prevCol = previousCollision,
-            canReusePrevCol = false;
+            canReusePrevCol = false,
+            bodyAVelocity,
+            bodyBVelocity,
+            relVel,
+            relativeVelocity;
+
+        if (bodyA.continuous || bodyB.continuous) {
+            bodyAVelocity = Vector.sub(bodyA.parent.position, bodyA.parent.positionPrev);
+            bodyBVelocity = Vector.sub(bodyB.parent.position, bodyB.parent.positionPrev);
+            relVel = Vector.sub(bodyAVelocity, bodyBVelocity);
+
+            if (bodyA.continuous === 2 || bodyB.continuous === 2) {
+                // always enable continous collisions
+                relativeVelocity = relVel;
+            } else {
+                // dynamically enable continous collisions based on velocity
+                var boundsX = Math.min(
+                        bodyA.bounds.max.x - bodyA.bounds.min.x - Math.abs(bodyAVelocity.x), 
+                        bodyB.bounds.max.x - bodyB.bounds.min.x - Math.abs(bodyBVelocity.x)
+                    ),
+                    boundsY = Math.min(
+                        bodyA.bounds.max.y - bodyA.bounds.min.y - Math.abs(bodyAVelocity.y), 
+                        bodyB.bounds.max.y - bodyB.bounds.min.y - Math.abs(bodyBVelocity.y)
+                    );
+
+                if (Math.abs(relVel.x) > boundsX || Math.abs(relVel.y) > boundsY) {
+                    relativeVelocity = relVel;
+                }
+            }
+        }
 
         if (prevCol) {
             // estimate total motion
@@ -3204,31 +3303,31 @@ var Vector = require('../geometry/Vector');
                 axisBodyB = axisBodyA === bodyA ? bodyB : bodyA,
                 axes = [axisBodyA.axes[prevCol.axisNumber]];
 
-            minOverlap = _overlapAxes(axisBodyA.vertices, axisBodyB.vertices, axes);
+            minOverlap = _overlapAxes(axisBodyA.vertices, axisBodyB.vertices, axes, relativeVelocity);
             collision.reused = true;
 
-            if (minOverlap.overlap <= 0) {
+            if (minOverlap.overlap === null) {
                 collision.collided = false;
                 return collision;
             }
         } else {
             // if we can't reuse a result, perform a full SAT test
 
-            overlapAB = _overlapAxes(bodyA.vertices, bodyB.vertices, bodyA.axes);
+            overlapAB = _overlapAxes(bodyA.vertices, bodyB.vertices, bodyA.axes, relativeVelocity);
 
-            if (overlapAB.overlap <= 0) {
+            if (overlapAB.overlap === null) {
                 collision.collided = false;
                 return collision;
             }
 
-            overlapBA = _overlapAxes(bodyB.vertices, bodyA.vertices, bodyB.axes);
+            overlapBA = _overlapAxes(bodyB.vertices, bodyA.vertices, bodyB.axes, relativeVelocity);
 
-            if (overlapBA.overlap <= 0) {
+            if (overlapBA.overlap === null) {
                 collision.collided = false;
                 return collision;
             }
 
-            if (overlapAB.overlap < overlapBA.overlap) {
+            if (Math.abs(overlapAB.overlap) < Math.abs(overlapBA.overlap)) {
                 minOverlap = overlapAB;
                 collision.axisBody = bodyA;
             } else {
@@ -3263,6 +3362,22 @@ var Vector = require('../geometry/Vector');
         };
 
         // find support points, there is always either exactly one or two
+        collision.supports = SAT.findSupports(collision);
+
+        return collision;
+    };
+
+    /**
+     * Find support vertices for a collision.
+     * @method findSupports
+     * @param {} collision
+     * @return {vertices} supports
+     */
+    SAT.findSupports = function(collision) {
+        var bodyA = collision.bodyA,
+            bodyB = collision.bodyB;
+
+        // find support points, there is always either exactly one or two
         var verticesB = _findSupports(bodyA, bodyB, collision.normal),
             supports = collision.supports || [];
         supports.length = 0;
@@ -3289,9 +3404,7 @@ var Vector = require('../geometry/Vector');
         if (supports.length < 1)
             supports = [verticesB[0]];
         
-        collision.supports = supports;
-
-        return collision;
+        return supports;
     };
 
     /**
@@ -3301,16 +3414,18 @@ var Vector = require('../geometry/Vector');
      * @param {} verticesA
      * @param {} verticesB
      * @param {} axes
+     * @param {} [relativeVelocity]
      * @return result
      */
-    var _overlapAxes = function(verticesA, verticesB, axes) {
+    var _overlapAxes = function(verticesA, verticesB, axes, relativeVelocity) {
         var projectionA = Vector._temp[0], 
             projectionB = Vector._temp[1],
             result = { overlap: Number.MAX_VALUE },
             overlap,
-            axis;
+            axis,
+            i;
 
-        for (var i = 0; i < axes.length; i++) {
+        for (i = 0; i < axes.length; i++) {
             axis = axes[i];
 
             _projectToAxis(projectionA, verticesA, axis);
@@ -3319,8 +3434,18 @@ var Vector = require('../geometry/Vector');
             overlap = Math.min(projectionA.max - projectionB.min, projectionB.max - projectionA.min);
 
             if (overlap <= 0) {
-                result.overlap = overlap;
-                return result;
+                if (relativeVelocity) {
+                    // speculative collision check based on velocity along axis
+                    var axisVelocity = Vector.dot(axis, relativeVelocity);
+
+                    if (axisVelocity < -overlap && axisVelocity > overlap) {
+                        result.overlap = null;
+                        return result;
+                    }
+                } else {
+                    result.overlap = null;
+                    return result;
+                }
             }
 
             if (overlap < result.overlap) {
@@ -4570,6 +4695,9 @@ var Body = require('../body/Body');
 
         // narrowphase pass: find actual collisions, then create or update collision pairs
         var collisions = broadphase.detector(broadphasePairs, engine);
+
+        // solve continuous collisions
+        Resolver.solveContinuous(collisions);
 
         // update collision pairs
         var pairs = engine.pairs,
@@ -8272,7 +8400,7 @@ var Vector = require('../geometry/Vector');
                 continue;
 
             c.moveTo(body.position.x, body.position.y);
-            c.lineTo(body.position.x + (body.position.x - body.positionPrev.x) * 2, body.position.y + (body.position.y - body.positionPrev.y) * 2);
+            c.lineTo(body.position.x + (body.position.x - body.positionPrev.x), body.position.y + (body.position.y - body.positionPrev.y));
         }
 
         c.lineWidth = 3;
