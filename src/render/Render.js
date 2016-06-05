@@ -845,7 +845,7 @@ var Vector = require('../geometry/Vector');
                 continue;
 
             c.moveTo(body.position.x, body.position.y);
-            c.lineTo(body.position.x + (body.position.x - body.positionPrev.x) * 2, body.position.y + (body.position.y - body.positionPrev.y) * 2);
+            c.lineTo(body.position.x + (body.position.x - body.positionPrev.x), body.position.y + (body.position.y - body.positionPrev.y));
         }
 
         c.lineWidth = 3;
