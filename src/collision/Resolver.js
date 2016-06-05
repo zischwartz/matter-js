@@ -8,10 +8,12 @@ var Resolver = {};
 
 module.exports = Resolver;
 
+var Body = require('../body/Body');
 var Vertices = require('../geometry/Vertices');
 var Vector = require('../geometry/Vector');
 var Common = require('../core/Common');
 var Bounds = require('../geometry/Bounds');
+var SAT = require('../collision/SAT');
 
 (function() {
 
@@ -20,6 +22,57 @@ var Bounds = require('../geometry/Bounds');
     Resolver._positionDampen = 0.9;
     Resolver._positionWarming = 0.8;
     Resolver._frictionNormalMultiplier = 5;
+
+    /**
+     * Solve continuous collisions using the speculative contacts approach.
+     * @method solveContinuous
+     * @param {collision[]} collisions
+     */
+    Resolver.solveContinuous = function(collisions) {
+        var i,
+            collision,
+            bodyA,
+            bodyB;
+
+        for (i = 0; i < collisions.length; i++) {
+            collision = collisions[i];
+
+            // a negative depth signifies a continuous collision has been detected
+            if (collision.depth >= 0)
+                continue;
+            
+            bodyA = collision.bodyA.parent;
+            bodyB = collision.bodyB.parent;
+
+            var normalSpeedBodyA = Math.abs(Vector.dot(collision.normal, bodyA.velocity)),
+                normalSpeedBodyB = Math.abs(Vector.dot(collision.normal, bodyB.velocity)),
+                normalSpeedTotal = normalSpeedBodyA + normalSpeedBodyB,
+                bodyAShare = normalSpeedBodyA / normalSpeedTotal,
+                bodyBShare = normalSpeedBodyB / normalSpeedTotal;
+
+            // translate the bodies such they are colliding exactly on edge
+            if (bodyAShare > 0) {
+                // TODO: accumulate and defer translations for performance
+                Body.translate(bodyA, {
+                    x: collision.penetration.x * bodyAShare,
+                    y: collision.penetration.y * bodyAShare
+                });
+            }
+
+            if (bodyBShare > 0) {
+                Body.translate(bodyB, {
+                    x: -collision.penetration.x * bodyBShare,
+                    y: -collision.penetration.y * bodyBShare
+                });
+            }
+
+            // update collision
+            collision.depth = 0;
+            collision.penetration.x = 0;
+            collision.penetration.y = 0;
+            collision.supports = SAT.findSupports(collision);
+        }
+    };
 
     /**
      * Prepare pairs for position solving.

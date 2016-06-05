@@ -43,6 +43,7 @@
         <li><a href="http://brm.io/matter-js/demo#softBody">Basic Soft Bodies</a></li>
         <li><a href="http://brm.io/matter-js/demo#cloth">Cloth</a></li>
         <li><a href="http://brm.io/matter-js/demo#events">Events</a></li>
+        <li><a href="http://brm.io/matter-js/demo#continuousCollisions">Continuous Collisions</a></li>
         <li><a href="http://brm.io/matter-js/demo#collisionFiltering">Collision Filtering</a></li>
         <li><a href="http://brm.io/matter-js/demo#chains">Chains</a></li>
         <li><a href="http://brm.io/matter-js/demo#ballPool">Ball Pool</a></li>
@@ -93,6 +94,7 @@ See how others are using matter.js physics
 - Physical properties (mass, area, density etc.)
 - Restitution (elastic and inelastic collisions)
 - Collisions (broad-phase, mid-phase and narrow-phase)
+- Continuous collision checking
 - Stable stacking and resting
 - Conservation of momentum
 - Friction and resistance
@@ -170,6 +172,7 @@ The engine uses the following techniques:
 - Temporal coherence impulse caching and warming
 - Collision pairs, contacts and impulses maintained with a pair
     manager
+- Continuous collisions using the speculative collisions approach
 - Approximate Coulomb friction model using friction constraints
 - Constraints solved with the Gauss-Siedel method
 - Semi-variable time step, synced with rendering

@@ -29,7 +29,36 @@ var Vector = require('../geometry/Vector');
             minOverlap,
             collision,
             prevCol = previousCollision,
-            canReusePrevCol = false;
+            canReusePrevCol = false,
+            bodyAVelocity,
+            bodyBVelocity,
+            relVel,
+            relativeVelocity;
+
+        if (bodyA.continuous || bodyB.continuous) {
+            bodyAVelocity = Vector.sub(bodyA.parent.position, bodyA.parent.positionPrev);
+            bodyBVelocity = Vector.sub(bodyB.parent.position, bodyB.parent.positionPrev);
+            relVel = Vector.sub(bodyAVelocity, bodyBVelocity);
+
+            if (bodyA.continuous === 2 || bodyB.continuous === 2) {
+                // always enable continous collisions
+                relativeVelocity = relVel;
+            } else {
+                // dynamically enable continous collisions based on velocity
+                var boundsX = Math.min(
+                        bodyA.bounds.max.x - bodyA.bounds.min.x - Math.abs(bodyAVelocity.x), 
+                        bodyB.bounds.max.x - bodyB.bounds.min.x - Math.abs(bodyBVelocity.x)
+                    ),
+                    boundsY = Math.min(
+                        bodyA.bounds.max.y - bodyA.bounds.min.y - Math.abs(bodyAVelocity.y), 
+                        bodyB.bounds.max.y - bodyB.bounds.min.y - Math.abs(bodyBVelocity.y)
+                    );
+
+                if (Math.abs(relVel.x) > boundsX || Math.abs(relVel.y) > boundsY) {
+                    relativeVelocity = relVel;
+                }
+            }
+        }
 
         if (prevCol) {
             // estimate total motion
@@ -55,31 +84,31 @@ var Vector = require('../geometry/Vector');
                 axisBodyB = axisBodyA === bodyA ? bodyB : bodyA,
                 axes = [axisBodyA.axes[prevCol.axisNumber]];
 
-            minOverlap = _overlapAxes(axisBodyA.vertices, axisBodyB.vertices, axes);
+            minOverlap = _overlapAxes(axisBodyA.vertices, axisBodyB.vertices, axes, relativeVelocity);
             collision.reused = true;
 
-            if (minOverlap.overlap <= 0) {
+            if (minOverlap.overlap === null) {
                 collision.collided = false;
                 return collision;
             }
         } else {
             // if we can't reuse a result, perform a full SAT test
 
-            overlapAB = _overlapAxes(bodyA.vertices, bodyB.vertices, bodyA.axes);
+            overlapAB = _overlapAxes(bodyA.vertices, bodyB.vertices, bodyA.axes, relativeVelocity);
 
-            if (overlapAB.overlap <= 0) {
+            if (overlapAB.overlap === null) {
                 collision.collided = false;
                 return collision;
             }
 
-            overlapBA = _overlapAxes(bodyB.vertices, bodyA.vertices, bodyB.axes);
+            overlapBA = _overlapAxes(bodyB.vertices, bodyA.vertices, bodyB.axes, relativeVelocity);
 
-            if (overlapBA.overlap <= 0) {
+            if (overlapBA.overlap === null) {
                 collision.collided = false;
                 return collision;
             }
 
-            if (overlapAB.overlap < overlapBA.overlap) {
+            if (Math.abs(overlapAB.overlap) < Math.abs(overlapBA.overlap)) {
                 minOverlap = overlapAB;
                 collision.axisBody = bodyA;
             } else {
@@ -114,6 +143,22 @@ var Vector = require('../geometry/Vector');
         };
 
         // find support points, there is always either exactly one or two
+        collision.supports = SAT.findSupports(collision);
+
+        return collision;
+    };
+
+    /**
+     * Find support vertices for a collision.
+     * @method findSupports
+     * @param {} collision
+     * @return {vertices} supports
+     */
+    SAT.findSupports = function(collision) {
+        var bodyA = collision.bodyA,
+            bodyB = collision.bodyB;
+
+        // find support points, there is always either exactly one or two
         var verticesB = _findSupports(bodyA, bodyB, collision.normal),
             supports = collision.supports || [];
         supports.length = 0;
@@ -140,9 +185,7 @@ var Vector = require('../geometry/Vector');
         if (supports.length < 1)
             supports = [verticesB[0]];
         
-        collision.supports = supports;
-
-        return collision;
+        return supports;
     };
 
     /**
@@ -152,16 +195,18 @@ var Vector = require('../geometry/Vector');
      * @param {} verticesA
      * @param {} verticesB
      * @param {} axes
+     * @param {} [relativeVelocity]
      * @return result
      */
-    var _overlapAxes = function(verticesA, verticesB, axes) {
+    var _overlapAxes = function(verticesA, verticesB, axes, relativeVelocity) {
         var projectionA = Vector._temp[0], 
             projectionB = Vector._temp[1],
             result = { overlap: Number.MAX_VALUE },
             overlap,
-            axis;
+            axis,
+            i;
 
-        for (var i = 0; i < axes.length; i++) {
+        for (i = 0; i < axes.length; i++) {
             axis = axes[i];
 
             _projectToAxis(projectionA, verticesA, axis);
@@ -170,8 +215,18 @@ var Vector = require('../geometry/Vector');
             overlap = Math.min(projectionA.max - projectionB.min, projectionB.max - projectionA.min);
 
             if (overlap <= 0) {
-                result.overlap = overlap;
-                return result;
+                if (relativeVelocity) {
+                    // speculative collision check based on velocity along axis
+                    var axisVelocity = Vector.dot(axis, relativeVelocity);
+
+                    if (axisVelocity < -overlap && axisVelocity > overlap) {
+                        result.overlap = null;
+                        return result;
+                    }
+                } else {
+                    result.overlap = null;
+                    return result;
+                }
             }
 
             if (overlap < result.overlap) {
