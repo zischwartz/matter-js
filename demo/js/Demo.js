@@ -183,12 +183,19 @@
 
         // keyboard controls
         document.onkeypress = function(keys) {
-            // shift + a = toggle manual
+            // shift + R = reset
+            if (keys.shiftKey && keys.keyCode === 82) {
+                Demo.reset(demo);
+                Demo.setScene(demo, demo.sceneName);
+                Gui.update(demo.gui);
+            }
+
+            // shift + A = toggle manual
             if (keys.shiftKey && keys.keyCode === 65) {
                 Demo.setManualControl(demo, !demo.isManual);
             }
 
-            // shift + q = step
+            // shift + Q = step
             if (keys.shiftKey && keys.keyCode === 81) {
                 if (!demo.isManual) {
                     Demo.setManualControl(demo, true);
@@ -249,7 +256,7 @@
                 runner.frameRequestId = window.requestAnimationFrame(render);
                 Events.trigger(engine, 'beforeUpdate');
                 Events.trigger(engine, 'tick');
-                engine.render.controller.world(engine);
+                Render.world(demo.render);
                 Events.trigger(engine, 'afterUpdate');
             })();
         } else {
