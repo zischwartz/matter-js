@@ -56,6 +56,7 @@
     "constraintImpulse": {
       "#": 10
     },
+    "continuous": 0,
     "density": {
       "#.": "Number",
       "#v": [
@@ -265,6 +266,7 @@
     "constraintImpulse": {
       "#": 32
     },
+    "continuous": 0,
     "density": {
       "#.": "Number",
       "#v": [
@@ -474,6 +476,7 @@
     "constraintImpulse": {
       "#": 54
     },
+    "continuous": 0,
     "density": {
       "#.": "Number",
       "#v": [
@@ -683,6 +686,7 @@
     "constraintImpulse": {
       "#": 76
     },
+    "continuous": 0,
     "density": {
       "#.": "Number",
       "#v": [
@@ -1048,6 +1052,7 @@
     "constraintImpulse": {
       "#": 110
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 111
@@ -1405,6 +1410,7 @@
     "constraintImpulse": {
       "#": 150
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 151
@@ -1762,6 +1768,7 @@
     "constraintImpulse": {
       "#": 190
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 191
@@ -2119,6 +2126,7 @@
     "constraintImpulse": {
       "#": 230
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 231
@@ -2476,6 +2484,7 @@
     "constraintImpulse": {
       "#": 270
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 271
@@ -2833,6 +2842,7 @@
     "constraintImpulse": {
       "#": 310
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 311
@@ -3190,6 +3200,7 @@
     "constraintImpulse": {
       "#": 350
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 351
@@ -3547,6 +3558,7 @@
     "constraintImpulse": {
       "#": 390
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 391
@@ -3904,6 +3916,7 @@
     "constraintImpulse": {
       "#": 430
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 431
@@ -4261,6 +4274,7 @@
     "constraintImpulse": {
       "#": 470
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 471
@@ -4618,6 +4632,7 @@
     "constraintImpulse": {
       "#": 510
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 511
@@ -4975,6 +4990,7 @@
     "constraintImpulse": {
       "#": 550
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 551
@@ -5332,6 +5348,7 @@
     "constraintImpulse": {
       "#": 590
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 591
@@ -5689,6 +5706,7 @@
     "constraintImpulse": {
       "#": 630
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 631
@@ -6046,6 +6064,7 @@
     "constraintImpulse": {
       "#": 670
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 671
@@ -6403,6 +6422,7 @@
     "constraintImpulse": {
       "#": 710
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 711
@@ -6760,6 +6780,7 @@
     "constraintImpulse": {
       "#": 750
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 751
@@ -7117,6 +7138,7 @@
     "constraintImpulse": {
       "#": 790
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 791
@@ -7474,6 +7496,7 @@
     "constraintImpulse": {
       "#": 830
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 831
@@ -7831,6 +7854,7 @@
     "constraintImpulse": {
       "#": 870
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 871
@@ -8188,6 +8212,7 @@
     "constraintImpulse": {
       "#": 910
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 911
@@ -8545,6 +8570,7 @@
     "constraintImpulse": {
       "#": 950
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 951
@@ -8902,6 +8928,7 @@
     "constraintImpulse": {
       "#": 990
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 991
@@ -9259,6 +9286,7 @@
     "constraintImpulse": {
       "#": 1030
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 1031
@@ -9616,6 +9644,7 @@
     "constraintImpulse": {
       "#": 1070
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 1071
@@ -9973,6 +10002,7 @@
     "constraintImpulse": {
       "#": 1110
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 1111
@@ -10330,6 +10360,7 @@
     "constraintImpulse": {
       "#": 1150
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 1151
@@ -10687,6 +10718,7 @@
     "constraintImpulse": {
       "#": 1190
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 1191
@@ -11044,6 +11076,7 @@
     "constraintImpulse": {
       "#": 1230
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 1231
@@ -11401,6 +11434,7 @@
     "constraintImpulse": {
       "#": 1270
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 1271
@@ -11758,6 +11792,7 @@
     "constraintImpulse": {
       "#": 1310
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 1311
@@ -12115,6 +12150,7 @@
     "constraintImpulse": {
       "#": 1350
     },
+    "continuous": 0,
     "density": 0.001,
     "force": {
       "#": 1351

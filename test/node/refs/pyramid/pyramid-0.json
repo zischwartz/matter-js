@@ -42,6 +42,7 @@
     "parts": {
       "#": 3
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 4
@@ -259,6 +260,7 @@
     "parts": {
       "#": 25
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 26
@@ -476,6 +478,7 @@
     "parts": {
       "#": 47
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 48
@@ -693,6 +696,7 @@
     "parts": {
       "#": 69
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 70
@@ -1128,6 +1132,7 @@
     "parts": {
       "#": 95
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 96
@@ -1330,6 +1335,7 @@
     "parts": {
       "#": 117
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 118
@@ -1532,6 +1538,7 @@
     "parts": {
       "#": 139
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 140
@@ -1734,6 +1741,7 @@
     "parts": {
       "#": 161
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 162
@@ -1936,6 +1944,7 @@
     "parts": {
       "#": 183
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 184
@@ -2138,6 +2147,7 @@
     "parts": {
       "#": 205
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 206
@@ -2340,6 +2350,7 @@
     "parts": {
       "#": 227
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 228
@@ -2542,6 +2553,7 @@
     "parts": {
       "#": 249
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 250
@@ -2744,6 +2756,7 @@
     "parts": {
       "#": 271
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 272
@@ -2946,6 +2959,7 @@
     "parts": {
       "#": 293
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 294
@@ -3148,6 +3162,7 @@
     "parts": {
       "#": 315
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 316
@@ -3350,6 +3365,7 @@
     "parts": {
       "#": 337
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 338
@@ -3552,6 +3568,7 @@
     "parts": {
       "#": 359
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 360
@@ -3754,6 +3771,7 @@
     "parts": {
       "#": 381
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 382
@@ -3956,6 +3974,7 @@
     "parts": {
       "#": 403
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 404
@@ -4158,6 +4177,7 @@
     "parts": {
       "#": 425
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 426
@@ -4360,6 +4380,7 @@
     "parts": {
       "#": 447
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 448
@@ -4562,6 +4583,7 @@
     "parts": {
       "#": 469
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 470
@@ -4764,6 +4786,7 @@
     "parts": {
       "#": 491
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 492
@@ -4966,6 +4989,7 @@
     "parts": {
       "#": 513
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 514
@@ -5168,6 +5192,7 @@
     "parts": {
       "#": 535
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 536
@@ -5370,6 +5395,7 @@
     "parts": {
       "#": 557
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 558
@@ -5572,6 +5598,7 @@
     "parts": {
       "#": 579
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 580
@@ -5774,6 +5801,7 @@
     "parts": {
       "#": 601
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 602
@@ -5976,6 +6004,7 @@
     "parts": {
       "#": 623
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 624
@@ -6178,6 +6207,7 @@
     "parts": {
       "#": 645
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 646
@@ -6380,6 +6410,7 @@
     "parts": {
       "#": 667
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 668
@@ -6582,6 +6613,7 @@
     "parts": {
       "#": 689
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 690
@@ -6784,6 +6816,7 @@
     "parts": {
       "#": 711
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 712
@@ -6986,6 +7019,7 @@
     "parts": {
       "#": 733
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 734
@@ -7188,6 +7222,7 @@
     "parts": {
       "#": 755
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 756
@@ -7390,6 +7425,7 @@
     "parts": {
       "#": 777
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 778
@@ -7592,6 +7628,7 @@
     "parts": {
       "#": 799
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 800
@@ -7794,6 +7831,7 @@
     "parts": {
       "#": 821
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 822
@@ -7996,6 +8034,7 @@
     "parts": {
       "#": 843
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 844
@@ -8198,6 +8237,7 @@
     "parts": {
       "#": 865
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 866
@@ -8400,6 +8440,7 @@
     "parts": {
       "#": 887
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 888
@@ -8602,6 +8643,7 @@
     "parts": {
       "#": 909
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 910
@@ -8804,6 +8846,7 @@
     "parts": {
       "#": 931
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 932
@@ -9006,6 +9049,7 @@
     "parts": {
       "#": 953
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 954
@@ -9208,6 +9252,7 @@
     "parts": {
       "#": 975
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 976
@@ -9410,6 +9455,7 @@
     "parts": {
       "#": 997
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 998
@@ -9612,6 +9658,7 @@
     "parts": {
       "#": 1019
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 1020
@@ -9814,6 +9861,7 @@
     "parts": {
       "#": 1041
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 1042
@@ -10016,6 +10064,7 @@
     "parts": {
       "#": 1063
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 1064
@@ -10218,6 +10267,7 @@
     "parts": {
       "#": 1085
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 1086
@@ -10420,6 +10470,7 @@
     "parts": {
       "#": 1107
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 1108
@@ -10622,6 +10673,7 @@
     "parts": {
       "#": 1129
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 1130
@@ -10824,6 +10876,7 @@
     "parts": {
       "#": 1151
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 1152
@@ -11026,6 +11079,7 @@
     "parts": {
       "#": 1173
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 1174
@@ -11228,6 +11282,7 @@
     "parts": {
       "#": 1195
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 1196
@@ -11430,6 +11485,7 @@
     "parts": {
       "#": 1217
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 1218
@@ -11632,6 +11688,7 @@
     "parts": {
       "#": 1239
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 1240
@@ -11834,6 +11891,7 @@
     "parts": {
       "#": 1261
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 1262
@@ -12036,6 +12094,7 @@
     "parts": {
       "#": 1283
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 1284
@@ -12238,6 +12297,7 @@
     "parts": {
       "#": 1305
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 1306
@@ -12440,6 +12500,7 @@
     "parts": {
       "#": 1327
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 1328
@@ -12642,6 +12703,7 @@
     "parts": {
       "#": 1349
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 1350
@@ -12844,6 +12906,7 @@
     "parts": {
       "#": 1371
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 1372
@@ -13046,6 +13109,7 @@
     "parts": {
       "#": 1393
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 1394
@@ -13248,6 +13312,7 @@
     "parts": {
       "#": 1415
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 1416
@@ -13450,6 +13515,7 @@
     "parts": {
       "#": 1437
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 1438
@@ -13652,6 +13718,7 @@
     "parts": {
       "#": 1459
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 1460
@@ -13854,6 +13921,7 @@
     "parts": {
       "#": 1481
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 1482

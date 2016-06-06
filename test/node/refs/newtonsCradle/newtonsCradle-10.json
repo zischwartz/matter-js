@@ -42,6 +42,7 @@
     "parts": {
       "#": 3
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 4
@@ -269,6 +270,7 @@
     "parts": {
       "#": 26
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 27
@@ -496,6 +498,7 @@
     "parts": {
       "#": 49
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 50
@@ -723,6 +726,7 @@
     "parts": {
       "#": 72
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 73
@@ -994,6 +998,7 @@
     "parts": {
       "#": 99
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 100
@@ -1553,6 +1558,7 @@
     "parts": {
       "#": 155
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 156
@@ -2112,6 +2118,7 @@
     "parts": {
       "#": 211
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 212
@@ -2671,6 +2678,7 @@
     "parts": {
       "#": 267
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 268
@@ -3230,6 +3238,7 @@
     "parts": {
       "#": 323
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 324
@@ -4033,6 +4042,7 @@
     "parts": {
       "#": 403
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 404
@@ -4499,6 +4509,7 @@
     "parts": {
       "#": 450
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 451
@@ -4965,6 +4976,7 @@
     "parts": {
       "#": 497
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 498
@@ -5431,6 +5443,7 @@
     "parts": {
       "#": 544
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 545
@@ -5897,6 +5910,7 @@
     "parts": {
       "#": 591
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 592
@@ -6363,6 +6377,7 @@
     "parts": {
       "#": 638
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 639
@@ -6829,6 +6844,7 @@
     "parts": {
       "#": 685
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 686

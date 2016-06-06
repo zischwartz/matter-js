@@ -1,6 +1,6 @@
 [
   {
-    "id": 695,
+    "id": 11,
     "type": "composite",
     "parent": null,
     "isModified": false,
@@ -48,6 +48,7 @@
     "parts": {
       "#": 3
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 4
@@ -275,6 +276,7 @@
     "parts": {
       "#": 26
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 27
@@ -502,6 +504,7 @@
     "parts": {
       "#": 49
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 50
@@ -729,6 +732,7 @@
     "parts": {
       "#": 72
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 73
@@ -956,6 +960,7 @@
     "parts": {
       "#": 95
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 96
@@ -1183,6 +1188,7 @@
     "parts": {
       "#": 118
     },
+    "continuous": 0,
     "angle": 0,
     "vertices": {
       "#": 119
