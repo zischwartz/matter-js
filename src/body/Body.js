@@ -41,7 +41,7 @@ var Axes = require('../geometry/Axes');
             type: 'body',
             label: 'Body',
             parts: [],
-            continuous: 1,
+            continuous: 0,
             angle: 0,
             vertices: Vertices.fromPath('L 0 0 L 40 0 L 40 40 L 0 40'),
             position: { x: 0, y: 0 },
@@ -699,9 +699,9 @@ var Axes = require('../geometry/Axes');
 
     /**
      * Enables continuous collisions, there are three possible values:
-     * - 0: disabled
-     * - 1: dynamic
-     * - 2: always
+     * - `0` - disabled (default)
+     * - `1` - dynamic (recommended)
+     * - `2` - always
      *
      * Where the 'dynamic' setting enables continuous collisions only when required based on velocity.
      * This provides better performance than 'always' at the cost of slightly softer collisions.
