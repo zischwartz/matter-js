@@ -22,13 +22,14 @@
             }),
 
             Bodies.rectangle(450, 90, size, size, { 
-                continuous: 1, 
+                continuous: 1,
+                restitution: 0.9,
                 friction: 0, 
                 positionPrev: { x: 450 - 10, y: 90 - 40 } 
             }),
 
             Bodies.rectangle(100, 400, size, size, { 
-                continuous: 1, 
+                continuous: 1,
                 friction: 0, 
                 positionPrev: { x: 100 - 60, y: 400 } 
             }),
@@ -58,7 +59,6 @@
         renderOptions.showAngleIndicator = false;
         renderOptions.showVelocity = true;
         renderOptions.showBounds = true;
-        renderOptions.showIds = true;
     };
 
 })();
