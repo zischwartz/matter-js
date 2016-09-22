@@ -1,5 +1,5 @@
 /**
-* matter-js 0.10.0 by @liabru 2016-09-16
+* matter-js-hack dev by @liabru 2016-09-22
 * http://brm.io/matter-js/
 * License MIT
 */
@@ -2020,6 +2020,9 @@ var Bounds = require('../geometry/Bounds');
         var collisions = [],
             pairsTable = engine.pairs.table;
 
+        // @if DEBUG
+        var metrics = engine.metrics;
+        // @endif
         
         for (var i = 0; i < broadphasePairs.length; i++) {
             var bodyA = broadphasePairs[i][0], 
@@ -2031,6 +2034,9 @@ var Bounds = require('../geometry/Bounds');
             if (!Detector.canCollide(bodyA.collisionFilter, bodyB.collisionFilter))
                 continue;
 
+            // @if DEBUG
+            metrics.midphaseTests += 1;
+            // @endif
 
             // mid phase
             if (Bounds.overlaps(bodyA.bounds, bodyB.bounds)) {
@@ -2055,9 +2061,17 @@ var Bounds = require('../geometry/Bounds');
                             // narrow phase
                             var collision = SAT.collides(partA, partB, previousCollision);
 
+                            // @if DEBUG
+                            metrics.narrowphaseTests += 1;
+                            if (collision.reused)
+                                metrics.narrowReuseCount += 1;
+                            // @endif
 
                             if (collision.collided) {
                                 collisions.push(collision);
+                                // @if DEBUG
+                                metrics.narrowDetections += 1;
+                                // @endif
                             }
                         }
                     }
@@ -2154,6 +2168,10 @@ var Common = require('../core/Common');
             bucketId,
             gridChanged = false;
 
+        // @if DEBUG
+        var metrics = engine.metrics;
+        metrics.broadphaseTests = 0;
+        // @endif
 
         for (i = 0; i < bodies.length; i++) {
             var body = bodies[i];
@@ -2171,6 +2189,9 @@ var Common = require('../core/Common');
             // if the body has changed grid region
             if (!body.region || newRegion.id !== body.region.id || forceUpdate) {
 
+                // @if DEBUG
+                metrics.broadphaseTests += 1;
+                // @endif
 
                 if (!body.region || forceUpdate)
                     body.region = newRegion;
@@ -4488,6 +4509,9 @@ var Body = require('../body/Body');
         engine.broadphase = engine.broadphase.controller.create(engine.broadphase);
         engine.metrics = engine.metrics || { extended: false };
 
+        // @if DEBUG
+        engine.metrics = Metrics.create(engine.metrics);
+        // @endif
 
         return engine;
     };
@@ -4531,6 +4555,10 @@ var Body = require('../body/Body');
         var allBodies = Composite.allBodies(world),
             allConstraints = Composite.allConstraints(world);
 
+        // @if DEBUG
+        // reset metrics logging
+        Metrics.reset(engine.metrics);
+        // @endif
 
         // if sleeping enabled, call the sleeping controller
         if (engine.enableSleeping)
@@ -4606,6 +4634,10 @@ var Body = require('../body/Body');
         if (pairs.collisionEnd.length > 0)
             Events.trigger(engine, 'collisionEnd', { pairs: pairs.collisionEnd });
 
+        // @if DEBUG
+        // update metrics log
+        Metrics.update(engine.metrics, engine);
+        // @endif
 
         // clear force buffers
         _bodiesClearForces(allBodies);
@@ -4996,6 +5028,99 @@ var Common = require('./Common');
 })();
 
 },{"./Common":14}],17:[function(require,module,exports){
+// @if DEBUG
+/**
+* _Internal Class_, not generally used outside of the engine's internals.
+*
+*/
+
+var Metrics = {};
+
+module.exports = Metrics;
+
+var Composite = require('../body/Composite');
+var Common = require('./Common');
+
+(function() {
+
+    /**
+     * Creates a new metrics.
+     * @method create
+     * @private
+     * @return {metrics} A new metrics
+     */
+    Metrics.create = function(options) {
+        var defaults = {
+            extended: false,
+            narrowDetections: 0,
+            narrowphaseTests: 0,
+            narrowReuse: 0,
+            narrowReuseCount: 0,
+            midphaseTests: 0,
+            broadphaseTests: 0,
+            narrowEff: 0.0001,
+            midEff: 0.0001,
+            broadEff: 0.0001,
+            collisions: 0,
+            buckets: 0,
+            bodies: 0,
+            pairs: 0
+        };
+
+        return Common.extend(defaults, false, options);
+    };
+
+    /**
+     * Resets metrics.
+     * @method reset
+     * @private
+     * @param {metrics} metrics
+     */
+    Metrics.reset = function(metrics) {
+        if (metrics.extended) {
+            metrics.narrowDetections = 0;
+            metrics.narrowphaseTests = 0;
+            metrics.narrowReuse = 0;
+            metrics.narrowReuseCount = 0;
+            metrics.midphaseTests = 0;
+            metrics.broadphaseTests = 0;
+            metrics.narrowEff = 0;
+            metrics.midEff = 0;
+            metrics.broadEff = 0;
+            metrics.collisions = 0;
+            metrics.buckets = 0;
+            metrics.pairs = 0;
+            metrics.bodies = 0;
+        }
+    };
+
+    /**
+     * Updates metrics.
+     * @method update
+     * @private
+     * @param {metrics} metrics
+     * @param {engine} engine
+     */
+    Metrics.update = function(metrics, engine) {
+        if (metrics.extended) {
+            var world = engine.world,
+                bodies = Composite.allBodies(world);
+
+            metrics.collisions = metrics.narrowDetections;
+            metrics.pairs = engine.pairs.list.length;
+            metrics.bodies = bodies.length;
+            metrics.midEff = (metrics.narrowDetections / (metrics.midphaseTests || 1)).toFixed(2);
+            metrics.narrowEff = (metrics.narrowDetections / (metrics.narrowphaseTests || 1)).toFixed(2);
+            metrics.broadEff = (1 - (metrics.broadphaseTests / (bodies.length || 1))).toFixed(2);
+            metrics.narrowReuse = (metrics.narrowReuseCount / (metrics.narrowphaseTests || 1)).toFixed(2);
+            //var broadphase = engine.broadphase[engine.broadphase.current];
+            //if (broadphase.instance)
+            //    metrics.buckets = Common.keys(broadphase.instance.buckets).length;
+        }
+    };
+
+})();
+// @endif
 
 },{"../body/Composite":2,"./Common":14}],18:[function(require,module,exports){
 /**
@@ -7438,6 +7563,9 @@ Matter.Mouse = require('../core/Mouse');
 Matter.Runner = require('../core/Runner');
 Matter.Sleeping = require('../core/Sleeping');
 
+// @if DEBUG
+Matter.Metrics = require('../core/Metrics');
+// @endif
 
 Matter.Bodies = require('../factory/Bodies');
 Matter.Composites = require('../factory/Composites');
@@ -7647,14 +7775,18 @@ var Vector = require('../geometry/Vector');
         Events.trigger(render, 'beforeRender', event);
 
         // apply background if it has changed
-        if (render.currentBackground !== background)
-            _applyBackground(render, background);
+        // XXX won't work with node canvas
+        // if (render.currentBackground !== background)
+            // _applyBackground(render, background);
+
 
         // clear the canvas with a transparent fill, to allow the canvas background to show
-        context.globalCompositeOperation = 'source-in';
-        context.fillStyle = "transparent";
+        // context.globalCompositeOperation = 'source-in';
+        // console.log('background', background)
+        context.fillStyle = background;
+        // context.fillStyle = "transparent";
         context.fillRect(0, 0, canvas.width, canvas.height);
-        context.globalCompositeOperation = 'source-over';
+        // context.globalCompositeOperation = 'source-over';
 
         // handle bounds
         if (options.hasBounds) {
@@ -7773,6 +7905,27 @@ var Vector = require('../geometry/Vector');
                 text += "fps: " + Math.round(metrics.timing.fps) + space;
             }
 
+            // @if DEBUG
+            if (metrics.extended) {
+                if (metrics.timing) {
+                    text += "delta: " + metrics.timing.delta.toFixed(3) + space;
+                    text += "correction: " + metrics.timing.correction.toFixed(3) + space;
+                }
+
+                text += "bodies: " + bodies.length + space;
+
+                if (engine.broadphase.controller === Grid)
+                    text += "buckets: " + metrics.buckets + space;
+
+                text += "\n";
+
+                text += "collisions: " + metrics.collisions + space;
+                text += "pairs: " + engine.pairs.list.length + space;
+                text += "broad: " + metrics.broadEff + space;
+                text += "mid: " + metrics.midEff + space;
+                text += "narrow: " + metrics.narrowEff + space;
+            }
+            // @endif
 
             render.debugString = text;
             render.debugTimestamp = engine.timing.timestamp;
@@ -7925,6 +8078,8 @@ var Vector = require('../geometry/Vector');
                     var sprite = part.render.sprite;
                       // hack so we can pass in our own image, so it works with node
                     var texture = sprite.texture;
+                    // console.log('texture:')
+                    // console.log(texture)
                     // instead of
                     // texture = _getTexture(render, sprite.texture);
 

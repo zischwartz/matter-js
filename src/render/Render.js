@@ -183,14 +183,18 @@ var Vector = require('../geometry/Vector');
         Events.trigger(render, 'beforeRender', event);
 
         // apply background if it has changed
-        if (render.currentBackground !== background)
-            _applyBackground(render, background);
+        // XXX won't work with node canvas
+        // if (render.currentBackground !== background)
+            // _applyBackground(render, background);
+
 
         // clear the canvas with a transparent fill, to allow the canvas background to show
-        context.globalCompositeOperation = 'source-in';
-        context.fillStyle = "transparent";
+        // context.globalCompositeOperation = 'source-in';
+        // console.log('background', background)
+        context.fillStyle = background;
+        // context.fillStyle = "transparent";
         context.fillRect(0, 0, canvas.width, canvas.height);
-        context.globalCompositeOperation = 'source-over';
+        // context.globalCompositeOperation = 'source-over';
 
         // handle bounds
         if (options.hasBounds) {
