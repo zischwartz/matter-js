@@ -1,5 +1,5 @@
 /**
-* matter-js-hack dev by @liabru 2016-09-22
+* matter-js-hack master by @liabru 2016-10-08
 * http://brm.io/matter-js/
 * License MIT
 */
@@ -2020,9 +2020,6 @@ var Bounds = require('../geometry/Bounds');
         var collisions = [],
             pairsTable = engine.pairs.table;
 
-        // @if DEBUG
-        var metrics = engine.metrics;
-        // @endif
         
         for (var i = 0; i < broadphasePairs.length; i++) {
             var bodyA = broadphasePairs[i][0], 
@@ -2034,9 +2031,6 @@ var Bounds = require('../geometry/Bounds');
             if (!Detector.canCollide(bodyA.collisionFilter, bodyB.collisionFilter))
                 continue;
 
-            // @if DEBUG
-            metrics.midphaseTests += 1;
-            // @endif
 
             // mid phase
             if (Bounds.overlaps(bodyA.bounds, bodyB.bounds)) {
@@ -2061,17 +2055,9 @@ var Bounds = require('../geometry/Bounds');
                             // narrow phase
                             var collision = SAT.collides(partA, partB, previousCollision);
 
-                            // @if DEBUG
-                            metrics.narrowphaseTests += 1;
-                            if (collision.reused)
-                                metrics.narrowReuseCount += 1;
-                            // @endif
 
                             if (collision.collided) {
                                 collisions.push(collision);
-                                // @if DEBUG
-                                metrics.narrowDetections += 1;
-                                // @endif
                             }
                         }
                     }
@@ -2168,10 +2154,6 @@ var Common = require('../core/Common');
             bucketId,
             gridChanged = false;
 
-        // @if DEBUG
-        var metrics = engine.metrics;
-        metrics.broadphaseTests = 0;
-        // @endif
 
         for (i = 0; i < bodies.length; i++) {
             var body = bodies[i];
@@ -2189,9 +2171,6 @@ var Common = require('../core/Common');
             // if the body has changed grid region
             if (!body.region || newRegion.id !== body.region.id || forceUpdate) {
 
-                // @if DEBUG
-                metrics.broadphaseTests += 1;
-                // @endif
 
                 if (!body.region || forceUpdate)
                     body.region = newRegion;
@@ -4509,9 +4488,6 @@ var Body = require('../body/Body');
         engine.broadphase = engine.broadphase.controller.create(engine.broadphase);
         engine.metrics = engine.metrics || { extended: false };
 
-        // @if DEBUG
-        engine.metrics = Metrics.create(engine.metrics);
-        // @endif
 
         return engine;
     };
@@ -4555,10 +4531,6 @@ var Body = require('../body/Body');
         var allBodies = Composite.allBodies(world),
             allConstraints = Composite.allConstraints(world);
 
-        // @if DEBUG
-        // reset metrics logging
-        Metrics.reset(engine.metrics);
-        // @endif
 
         // if sleeping enabled, call the sleeping controller
         if (engine.enableSleeping)
@@ -4634,10 +4606,6 @@ var Body = require('../body/Body');
         if (pairs.collisionEnd.length > 0)
             Events.trigger(engine, 'collisionEnd', { pairs: pairs.collisionEnd });
 
-        // @if DEBUG
-        // update metrics log
-        Metrics.update(engine.metrics, engine);
-        // @endif
 
         // clear force buffers
         _bodiesClearForces(allBodies);
@@ -5028,99 +4996,6 @@ var Common = require('./Common');
 })();
 
 },{"./Common":14}],17:[function(require,module,exports){
-// @if DEBUG
-/**
-* _Internal Class_, not generally used outside of the engine's internals.
-*
-*/
-
-var Metrics = {};
-
-module.exports = Metrics;
-
-var Composite = require('../body/Composite');
-var Common = require('./Common');
-
-(function() {
-
-    /**
-     * Creates a new metrics.
-     * @method create
-     * @private
-     * @return {metrics} A new metrics
-     */
-    Metrics.create = function(options) {
-        var defaults = {
-            extended: false,
-            narrowDetections: 0,
-            narrowphaseTests: 0,
-            narrowReuse: 0,
-            narrowReuseCount: 0,
-            midphaseTests: 0,
-            broadphaseTests: 0,
-            narrowEff: 0.0001,
-            midEff: 0.0001,
-            broadEff: 0.0001,
-            collisions: 0,
-            buckets: 0,
-            bodies: 0,
-            pairs: 0
-        };
-
-        return Common.extend(defaults, false, options);
-    };
-
-    /**
-     * Resets metrics.
-     * @method reset
-     * @private
-     * @param {metrics} metrics
-     */
-    Metrics.reset = function(metrics) {
-        if (metrics.extended) {
-            metrics.narrowDetections = 0;
-            metrics.narrowphaseTests = 0;
-            metrics.narrowReuse = 0;
-            metrics.narrowReuseCount = 0;
-            metrics.midphaseTests = 0;
-            metrics.broadphaseTests = 0;
-            metrics.narrowEff = 0;
-            metrics.midEff = 0;
-            metrics.broadEff = 0;
-            metrics.collisions = 0;
-            metrics.buckets = 0;
-            metrics.pairs = 0;
-            metrics.bodies = 0;
-        }
-    };
-
-    /**
-     * Updates metrics.
-     * @method update
-     * @private
-     * @param {metrics} metrics
-     * @param {engine} engine
-     */
-    Metrics.update = function(metrics, engine) {
-        if (metrics.extended) {
-            var world = engine.world,
-                bodies = Composite.allBodies(world);
-
-            metrics.collisions = metrics.narrowDetections;
-            metrics.pairs = engine.pairs.list.length;
-            metrics.bodies = bodies.length;
-            metrics.midEff = (metrics.narrowDetections / (metrics.midphaseTests || 1)).toFixed(2);
-            metrics.narrowEff = (metrics.narrowDetections / (metrics.narrowphaseTests || 1)).toFixed(2);
-            metrics.broadEff = (1 - (metrics.broadphaseTests / (bodies.length || 1))).toFixed(2);
-            metrics.narrowReuse = (metrics.narrowReuseCount / (metrics.narrowphaseTests || 1)).toFixed(2);
-            //var broadphase = engine.broadphase[engine.broadphase.current];
-            //if (broadphase.instance)
-            //    metrics.buckets = Common.keys(broadphase.instance.buckets).length;
-        }
-    };
-
-})();
-// @endif
 
 },{"../body/Composite":2,"./Common":14}],18:[function(require,module,exports){
 /**
@@ -5790,7 +5665,7 @@ var Events = require('./Events');
 
 },{"./Events":16}],21:[function(require,module,exports){
 /**
-* The `Matter.Bodies` module contains factory methods for creating rigid body models 
+* The `Matter.Bodies` module contains factory methods for creating rigid body models
 * with commonly used body configurations (such as rectangles, circles and other polygons).
 *
 * See the included usage [examples](https://github.com/liabru/matter-js/tree/master/examples).
@@ -5813,7 +5688,7 @@ var Vector = require('../geometry/Vector');
 (function() {
 
     /**
-     * Creates a new rigid body model with a rectangle hull. 
+     * Creates a new rigid body model with a rectangle hull.
      * The options parameter is an object that specifies any properties you wish to override the defaults.
      * See the properties section of the `Matter.Body` module for detailed information on what you can pass via the `options` object.
      * @method rectangle
@@ -5827,7 +5702,7 @@ var Vector = require('../geometry/Vector');
     Bodies.rectangle = function(x, y, width, height, options) {
         options = options || {};
 
-        var rectangle = { 
+        var rectangle = {
             label: 'Rectangle Body',
             position: { x: x, y: y },
             vertices: Vertices.fromPath('L 0 0 L ' + width + ' 0 L ' + width + ' ' + height + ' L 0 ' + height)
@@ -5835,16 +5710,16 @@ var Vector = require('../geometry/Vector');
 
         if (options.chamfer) {
             var chamfer = options.chamfer;
-            rectangle.vertices = Vertices.chamfer(rectangle.vertices, chamfer.radius, 
+            rectangle.vertices = Vertices.chamfer(rectangle.vertices, chamfer.radius,
                                     chamfer.quality, chamfer.qualityMin, chamfer.qualityMax);
             delete options.chamfer;
         }
 
         return Body.create(Common.extend({}, rectangle, options));
     };
-    
+
     /**
-     * Creates a new rigid body model with a trapezoid hull. 
+     * Creates a new rigid body model with a trapezoid hull.
      * The options parameter is an object that specifies any properties you wish to override the defaults.
      * See the properties section of the `Matter.Body` module for detailed information on what you can pass via the `options` object.
      * @method trapezoid
@@ -5861,7 +5736,7 @@ var Vector = require('../geometry/Vector');
 
         slope *= 0.5;
         var roof = (1 - (slope * 2)) * width;
-        
+
         var x1 = width * slope,
             x2 = x1 + roof,
             x3 = x2 + x1,
@@ -5873,7 +5748,7 @@ var Vector = require('../geometry/Vector');
             verticesPath = 'L 0 0 L ' + x2 + ' ' + (-height) + ' L ' + x3 + ' 0';
         }
 
-        var trapezoid = { 
+        var trapezoid = {
             label: 'Trapezoid Body',
             position: { x: x, y: y },
             vertices: Vertices.fromPath(verticesPath)
@@ -5881,7 +5756,7 @@ var Vector = require('../geometry/Vector');
 
         if (options.chamfer) {
             var chamfer = options.chamfer;
-            trapezoid.vertices = Vertices.chamfer(trapezoid.vertices, chamfer.radius, 
+            trapezoid.vertices = Vertices.chamfer(trapezoid.vertices, chamfer.radius,
                                     chamfer.quality, chamfer.qualityMin, chamfer.qualityMax);
             delete options.chamfer;
         }
@@ -5890,7 +5765,7 @@ var Vector = require('../geometry/Vector');
     };
 
     /**
-     * Creates a new rigid body model with a circle hull. 
+     * Creates a new rigid body model with a circle hull.
      * The options parameter is an object that specifies any properties you wish to override the defaults.
      * See the properties section of the `Matter.Body` module for detailed information on what you can pass via the `options` object.
      * @method circle
@@ -5908,7 +5783,7 @@ var Vector = require('../geometry/Vector');
             label: 'Circle Body',
             circleRadius: radius
         };
-        
+
         // approximate circles with polygons until true circles implemented in SAT
         maxSides = maxSides || 25;
         var sides = Math.ceil(Math.max(10, Math.min(maxSides, radius)));
@@ -5921,7 +5796,7 @@ var Vector = require('../geometry/Vector');
     };
 
     /**
-     * Creates a new rigid body model with a regular polygon hull with the given number of sides. 
+     * Creates a new rigid body model with a regular polygon hull with the given number of sides.
      * The options parameter is an object that specifies any properties you wish to override the defaults.
      * See the properties section of the `Matter.Body` module for detailed information on what you can pass via the `options` object.
      * @method polygon
@@ -5950,7 +5825,7 @@ var Vector = require('../geometry/Vector');
             path += 'L ' + xx.toFixed(3) + ' ' + yy.toFixed(3) + ' ';
         }
 
-        var polygon = { 
+        var polygon = {
             label: 'Polygon Body',
             position: { x: x, y: y },
             vertices: Vertices.fromPath(path)
@@ -5958,7 +5833,7 @@ var Vector = require('../geometry/Vector');
 
         if (options.chamfer) {
             var chamfer = options.chamfer;
-            polygon.vertices = Vertices.chamfer(polygon.vertices, chamfer.radius, 
+            polygon.vertices = Vertices.chamfer(polygon.vertices, chamfer.radius,
                                     chamfer.quality, chamfer.qualityMin, chamfer.qualityMax);
             delete options.chamfer;
         }
@@ -6004,9 +5879,9 @@ var Vector = require('../geometry/Vector');
         removeCollinear = typeof removeCollinear !== 'undefined' ? removeCollinear : 0.01;
         minimumArea = typeof minimumArea !== 'undefined' ? minimumArea : 10;
 
-        if (!window.decomp) {
-            Common.log('Bodies.fromVertices: poly-decomp.js required. Could not decompose vertices. Fallback to convex hull.', 'warn');
-        }
+        // if (!window.decomp) {
+        //     Common.log('Bodies.fromVertices: poly-decomp.js required. Could not decompose vertices. Fallback to convex hull.', 'warn');
+        // }
 
         // ensure vertexSets is an array of arrays
         if (!Common.isArray(vertexSets[0])) {
@@ -6017,7 +5892,8 @@ var Vector = require('../geometry/Vector');
             vertices = vertexSets[v];
             isConvex = Vertices.isConvex(vertices);
 
-            if (isConvex || !window.decomp) {
+            // if (isConvex || !window.decomp) {
+            if (true) {
                 if (isConvex) {
                     vertices = Vertices.clockwiseSort(vertices);
                 } else {
@@ -6118,6 +5994,7 @@ var Vector = require('../geometry/Vector');
     };
 
 })();
+
 },{"../body/Body":1,"../core/Common":14,"../geometry/Bounds":24,"../geometry/Vector":26,"../geometry/Vertices":27}],22:[function(require,module,exports){
 /**
 * The `Matter.Composites` module contains factory methods for creating composite bodies
@@ -7563,9 +7440,6 @@ Matter.Mouse = require('../core/Mouse');
 Matter.Runner = require('../core/Runner');
 Matter.Sleeping = require('../core/Sleeping');
 
-// @if DEBUG
-Matter.Metrics = require('../core/Metrics');
-// @endif
 
 Matter.Bodies = require('../factory/Bodies');
 Matter.Composites = require('../factory/Composites');
@@ -7905,27 +7779,6 @@ var Vector = require('../geometry/Vector');
                 text += "fps: " + Math.round(metrics.timing.fps) + space;
             }
 
-            // @if DEBUG
-            if (metrics.extended) {
-                if (metrics.timing) {
-                    text += "delta: " + metrics.timing.delta.toFixed(3) + space;
-                    text += "correction: " + metrics.timing.correction.toFixed(3) + space;
-                }
-
-                text += "bodies: " + bodies.length + space;
-
-                if (engine.broadphase.controller === Grid)
-                    text += "buckets: " + metrics.buckets + space;
-
-                text += "\n";
-
-                text += "collisions: " + metrics.collisions + space;
-                text += "pairs: " + engine.pairs.list.length + space;
-                text += "broad: " + metrics.broadEff + space;
-                text += "mid: " + metrics.midEff + space;
-                text += "narrow: " + metrics.narrowEff + space;
-            }
-            // @endif
 
             render.debugString = text;
             render.debugTimestamp = engine.timing.timestamp;
